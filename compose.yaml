@@ -1,0 +1,43 @@
+version: '3'
+
+services:
+
+  mysql:
+    image: mysql:5.7.25
+    container_name: mysql
+    environment:
+        MYSQL_ROOT_PASSWORD: '7MesgA2RC1aUj0m8'
+        MYSQL_DATABASE: 'bitnami_reviewboard'
+        MYSQL_USER: 'bn_reviewboard'
+        MYSQL_PASSWORD: '888e13688e'
+    volumes:
+      - /home/jbuchman/local_data/mysql/my.cnf:/etc/mysql/conf.d/my.cnf:ro
+      - /home/jbuchman/local_data/mysql/data:/var/lib/mysql
+    networks:
+      - reviewboard
+
+  memcached:
+    image: memcached:1.5.12-alpine
+    container_name: memcached
+    networks:
+      - reviewboard
+  
+  reviewboard:
+    image: ikatson/reviewboard:2.5
+    volumes:
+      - /var/www/
+    depends_on:
+      - mysql
+      - memcached
+    environment:
+        DBHOST: mysql
+        DBUSER: 'bn_reviewboard'
+        DBPASSWORD: '888e13688e'
+        DBNAME: 'bitnami_reviewboard'
+        MEMCACHED: memcached:11211
+  #    - WAIT_FOR_POSTGRES=true
+    ports:
+      - 8000:8000
+
+networks:
+  reviewboard:
