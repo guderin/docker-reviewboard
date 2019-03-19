@@ -23,7 +23,7 @@ services:
       - reviewboard
   
   reviewboard:
-    image: ikatson/reviewboard:2.5
+    image: reviewboard:2.5
     volumes:
       - /var/www/
     depends_on:
