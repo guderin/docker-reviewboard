@@ -1,5 +1,7 @@
-FROM ubuntu:18.04
-MAINTAINER igor.katson@gmail.com
+FROM ubuntu:bionic
+
+LABEL maintainer="RB-Devops <RB-devops@harman.com>"
+LABEL description="Reviewboard dockerfile based on https://github.com/ikatson/docker-reviewboard"
 
 ARG RB_VERSION
 RUN apt-get update -y && \
