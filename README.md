@@ -1,6 +1,12 @@
 docker-reviewboard
 ==================
 
+Orginal source: https://github.com/ikatson/docker-reviewboard
+
+Added MySQL support	# Jacek Buchman jacek.buchman@harman.com
+
+
+
 Dockerized reviewboard. This container follows Docker's best practices, and DOES NOT include sshd, supervisor, apache2, or any other services except the reviewboard itself which is run with ```uwsgi```.
 
 The requirements are PostgreSQL and memcached, you can use either dockersized versions of them, or external ones, e.g. installed on the host machine, or even third-party machines.
@@ -14,7 +20,7 @@ The requirements are PostgreSQL and memcached, you can use either dockersized ve
 ### Using docker-compose
     docker-compose up
 
-Then go to http://127.0.0.1:8000/ (or your docker host) and login as admin:admin
+Then go to http://127.0.0.1:8080/ (or your docker host) and login as admin:admin
 
 Alternatively, here are the commands to do the same manually.
 
@@ -25,9 +31,9 @@ Alternatively, here are the commands to do the same manually.
     docker run --name rb-memcached -d -p 11211 memcached:alpine
 
     # Run reviewboard with a named volume to hold your site's data
-    docker run -it -v reviewboard-site:/var/www/ --link rb-postgres:pg --link rb-memcached:memcached -p 8000:8000 ikatson/reviewboard
+    docker run -it -v reviewboard-site:/var/www/ --link rb-postgres:pg --link rb-memcached:memcached -p 8080:8080 ikatson/reviewboard
 
-After that, go the url, e.g. ```http://localhost:8000/```, login as ```admin:admin```, change the admin password, and change the location of your SMTP server so that the reviewboard can send emails. You are all set!
+After that, go the url, e.g. ```http://localhost:8080/```, login as ```admin:admin```, change the admin password, and change the location of your SMTP server so that the reviewboard can send emails. You are all set!
 
 For details, read below.
 
@@ -91,17 +97,17 @@ The container accepts the following environment variables:
 Also, uwsgi accepts environment prefixed with ```UWSGI_``` for it's configuration
 E.g. ```-e UWSGI_PROCESSES=10``` will create 10 reviewboard processes.
 
-### Example. Run with dockerized postgres and memcached from above, expose on port 8000:
+### Example. Run with dockerized postgres and memcached from above, expose on port 8080:
 
-    docker run -it -v reviewboard-site:/var/www/ --link rb-postgres:pg --link memcached:memcached -p 8000:8000 ikatson/reviewboard
+    docker run -it -v reviewboard-site:/var/www/ --link rb-postgres:pg --link memcached:memcached -p 8080:8080 ikatson/reviewboard
 
 ### Example. Run with postgres and memcached installed on the host machine.
 
     DOCKER_HOST_IP=$( ip addr | grep 'inet 172.1' | awk '{print $2}' | sed 's/\/.*//')
 
-    docker run -it -v reviewboard-site:/var/www/ -p 8000:8080 -e PGHOST="$DOCKER_HOST_IP" -e PGPASSWORD=123 -e PGUSER=reviewboard -e MEMCACHED="$DOCKER_HOST_IP":11211 ikatson/reviewboard
+    docker run -it -v reviewboard-site:/var/www/ -p 8080:8080 -e PGHOST="$DOCKER_HOST_IP" -e PGPASSWORD=123 -e PGUSER=reviewboard -e MEMCACHED="$DOCKER_HOST_IP":11211 ikatson/reviewboard
 
-Now, go to the url, e.g. ```http://localhost:8000/```, login as ```admin:admin``` and change the password. The reviewboard is almost ready to use!
+Now, go to the url, e.g. ```http://localhost:8080/```, login as ```admin:admin``` and change the password. The reviewboard is almost ready to use!
 
 ### Container SMTP settings.
 

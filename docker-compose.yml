@@ -1,21 +1,36 @@
 version: '2'
 services:
-    postgres:
-        image: postgres:alpine
-        environment:
-            - POSTGRES_USER=reviewboard
+
+    mysql:
+      image: mysql:5.7.25
+      container_name: mysql
+      environment:
+          MYSQL_ROOT_PASSWORD: '7MesgA2RC1aUj0m8'
+          MYSQL_DATABASE: 'bitnami_reviewboard'
+          MYSQL_USER: 'bn_reviewboard'
+          MYSQL_PASSWORD: '888e13688e'
+      volumes:
+        - /home/jbuchman/local_data/mysql/my.cnf:/etc/mysql/conf.d/my.cnf:ro
+        - /home/jbuchman/local_data/mysql/data:/var/lib/mysql
+
     memcached:
         image: memcached:alpine
+        container_name: memcached
+
     reviewboard:
-        build: ./
+        image: reviewboard:3.0.14 
+        container_name: reviewboard
         volumes:
-            - /var/www/
+            - /home/jbuchman/local_data/reviewboard/www:/var/www
         depends_on:
-            - postgres
+            - mysql
             - memcached
         environment:
-            - PGHOST=postgres
-            - MEMCACHED=memcached:11211
-            - WAIT_FOR_POSTGRES=true
+            DBHOST: mysql
+            DBUSER: 'bn_reviewboard'
+            DBPASSWORD: '888e13688e'
+            DBNAME: 'bitnami_reviewboard'
+            MEMCACHED: memcached:11211
+            DEBUG: 1
         ports:
-            - 8000:8000
+            - 8080:8080
