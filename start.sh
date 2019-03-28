@@ -20,7 +20,7 @@ mkdir -p /var/www/
 
 CONFFILE=/var/www/reviewboard/conf/settings_local.py
 
-if [[ ! -d /var/www/reviewboard ]]; then
+if [[ ! -f ${CONFFILE} ]]; then
     rb-site install --noinput \
         --domain-name="$DOMAIN" \
         --site-root=/ --static-url=static/ --media-url=media/ \
@@ -39,4 +39,4 @@ if [[ "${DEBUG}" ]]; then
     cat "${CONFFILE}"
 fi
 
-exec uwsgi --ini /uwsgi.ini
+exec uwsgi --http-socket 127.0.0.1:8000 --ini /uwsgi.ini

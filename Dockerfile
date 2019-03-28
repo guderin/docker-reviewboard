@@ -6,7 +6,7 @@ MAINTAINER igor.katson@gmail.com
 RUN yum install -y pyliblzma
 
 RUN yum install -y epel-release && \
-    yum install -y ReviewBoard-2.5.6.1 uwsgi RBTools \
+    yum install -y ReviewBoard-2.5.17-1.el7 uwsgi RBTools net-tools telnet \
       uwsgi-plugin-python python-ldap python-pip python2-boto && \
     yum clean all
 

@@ -24,6 +24,7 @@ services:
   
   reviewboard:
     image: reviewboard:2.5
+    container_name: reviewboard
     volumes:
       - /var/www/
     depends_on:
@@ -38,6 +39,8 @@ services:
   #    - WAIT_FOR_POSTGRES=true
     ports:
       - 8000:8000
+    networks:
+      - reviewboard
 
 networks:
   reviewboard:
